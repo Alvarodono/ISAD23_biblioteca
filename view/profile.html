@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profila</title>
+  <link href="css/bootstrap.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/font-awesome.min.css">
+  <script src="js/bootstrap.bundle.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+        <span class="fs-4">Liburutegia</span>
+      </a>
+
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a href="/" class="nav-link">Etxea</a></li>
+        <li class="nav-item"><a href="/catalogue" class="nav-link">Katalogoa</a></li>
+        <li class="nav-item"><a href="/profile" class="nav-link active">{{ user.username }}</a></li>
+        <li class="nav-item"><a href="/mostrar_foro" class="nav-link {% if request.path == '/mostrar_foro' %}active{% endif %}">Forua</a></li>
+        <li class="nav-item"><a href="/logout?path={{ request.path }}" class="nav-link"><i class="fa fa-sign-out fa-lg"></i></a></li>
+      </ul>
+    </header>
+
+    <div class="profile-container mt-4">
+      <h2>Profila - {{ user.username }}</h2>
+      <p>Email-a: {{ user.email }}</p>
+        <a href="/lagun_sarea" class="btn btn-primary">Lagun-sarea</a>
+
+
+<h3>Erreseinak</h3>
+<a href="/addreview" class="btn btn-primary">Erreseina gehitu</a>
+        <a href="/mostrar_gomendio" class="btn btn-primary">Gomendioak</a>
+<div class="row">
+    {% for review in reviews %}
+        <div class="col-lg-4 col-md-6 col-sm-12 my-2">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ review.title }}</h5>
+                    <p class="card-text">Puntuazioa: {{ review.rating }}</p>
+                    <p class="card-text">Erreseina: {{ review.review_text }}</p>
+                    <p class="card-text">Data: {{ review.date_time|formatdatetime }}</p>
+                    <a href="/edit-review?reviewId={{review.id}}" class="btn btn-warning">Erreseina Editatu</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+
+      <h3>Erreserbatutako Liburuak</h3>
+        <div class="row">
+
+        {% for book in reserved_books %}
+            <div class="col-lg-4 col-md-6 col-sm-12 my-2">
+                <div class="card d-flex flex-row" style="width: 18rem;">
+                    {% if book.cover: %}
+                        <img src="{{book.cover}}" class="rounded" style="max-width: 6rem; height: fit-content;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{book.title}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{book.author}}</h6>
+                        {% if book.description: %}
+                        <p class="card-text">{{book.description}}</p>
+                        {% endif %}
+                        <a href="/return-book?bookId={{book.id}}" class="btn btn-primary">Itzuli</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+
+              <h3>Irakurritako Liburuak</h3>
+        <div class="row">
+
+        {% for book in read_books %}
+            <div class="col-lg-4 col-md-6 col-sm-12 my-2">
+                <div class="card d-flex flex-row" style="width: 18rem;">
+                    {% if book.cover: %}
+                        <img src="{{book.cover}}" class="rounded" style="max-width: 6rem; height: fit-content;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{book.title}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{book.author}}</h6>
+                        {% if book.description: %}
+                        <p class="card-text">{{book.description}}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+
+
+    </div>
+  </div>
+</body>
+</html>
+
+
+
+
+

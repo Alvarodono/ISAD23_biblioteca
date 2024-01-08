@@ -1,0 +1,21 @@
+<!-- administratzaile.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container p-5 my-5 border">
+    <h1>Erabiltzailea Ezabatu</h1>
+    <p>Ezabatu nahi den erabiltzailearen datuak sartu</p>
+     <form method="post" action="/ezabatuErabiltzaile">
+        <div class="mb-3">
+            <label for="erabiltzailea" class="form-label">Erabiltzailea</label>
+            <input type="text" class="form-control" id="erabiltzailea" name="erabiltzailea" required>
+        </div>
+        <div class="mb-3">
+            <label for="id" class="form-label">ID-a</label>
+            <input class="form-control" id="id" name="id" required></input>
+        </div>
+        <button type="submit" class="btn btn-primary">Ezabatu</button>
+    </form>
+</div>
+{% endblock %}

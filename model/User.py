@@ -2,6 +2,9 @@ import datetime
 from .Connection import Connection
 from .tools import hash_password
 
+
+from sqlalchemy.orm import relationship
+
 db = Connection()
 
 class Session:
@@ -12,14 +15,36 @@ class Session:
 	def __str__(self):
 		return f"{self.hash} ({self.time})"
 
+
+
+class UserReservedBook:
+    def __init__(self, id, user_email, book_id):
+        self.id = id
+        self.user_email = user_email
+        self.book_id = book_id
+
+
+
 class User:
-	def __init__(self, id, username, email):
+	def __init__(self, id, username, email, admin):
 		self.id = id
 		self.username = username
 		self.email = email
+		self.admin = admin
 
 	def __str__(self):
 		return f"{self.username} ({self.email})"
+
+	def get_reserved_books(self):
+		query = "SELECT * FROM User_Reserved_Book WHERE user_email = ?"
+		reserved_books_data = db.select(query, (self.email,))
+
+		reserved_books = []
+		for data in reserved_books_data:
+			reserved_book = UserReservedBook(data['id'], data['user_email'], data['book_id'])
+			reserved_books.append(reserved_book)
+
+		return reserved_books
 
 	def new_session(self):
 		now = float(datetime.datetime.now().time().strftime("%Y%m%d%H%M%S.%f"))
@@ -39,3 +64,9 @@ class User:
 
 	def delete_session(self, session_hash):
 		db.delete("DELETE FROM Session WHERE session_hash = ? AND user_id = ?", (session_hash, self.id))
+
+	def isNotAdmin(self):
+		if self.admin == 0:
+			return True
+		else:
+			return False

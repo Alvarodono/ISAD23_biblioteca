@@ -5,16 +5,16 @@
 
     <form class="form-inline">
       <div class="input-group mb-2 mr-sm-2">
-        <label for="title" class="col-sm-2 col-form-label">Title</label>
-        <input type="text" class="form-control mb-2" id="title" name="title" placeholder="Title" {% if title != "": %}value="{{title}}"{% endif %}>
+        <label for="title" class="col-sm-2 col-form-label">Izenburua</label>
+        <input type="text" class="form-control mb-2" id="title" name="title" placeholder="Izenburua" {% if title != "": %}value="{{title}}"{% endif %}>
       </div>
       <div class="input-group mb-2 mr-sm-2">
-        <label for="author" class="col-sm-2 col-form-label">Author</label>
-        <input type="text" class="form-control mb-2" id="author" name="author" placeholder="Author name" {% if author != "": %}value="{{author}}"{% endif %}>
+        <label for="author" class="col-sm-2 col-form-label">Idazlea</label>
+        <input type="text" class="form-control mb-2" id="author" name="author" placeholder="Idazlearen izena" {% if author != "": %}value="{{author}}"{% endif %}>
       </div>
       <button type="submit" class="btn btn-primary">
           <i class="fa fa-search"></i>
-          Search
+          Bilatu
       </button>
     </form>
 
@@ -34,6 +34,7 @@
                         {% if book.description: %}
                         <p class="card-text">{{book.description}}</p>
                         {% endif %}
+                        <a href="/reserve-book?bookId={{book.id}}" class="btn btn-primary">Liburua Erreserbatu</a>
                     </div>
                 </div>
             </div>
