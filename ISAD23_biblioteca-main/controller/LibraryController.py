@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from flask import session
 from model import Connection, Book, User
 from model.tools import hash_password
 
@@ -21,7 +20,7 @@ def get_reviews_by_user(user_email):
             'id': review[0],
             'book_id': review[1],
             'user_email': review[2],
-            'title': review[6],
+            'title': review[6],  # Cambia a 'book_title' en lugar de 'review[6]'
             'rating': review[3],
             'review_text': review[4],
             'date_time': review[5],
@@ -55,7 +54,7 @@ class LibraryController:
                 'id': review[0],
                 'book_id': review[1],
                 'user_email': review[2],
-                'title': review[6],
+                'title': review[6],  # Cambia a 'book_title' en lugar de 'review[6]'
                 'rating': review[3],
                 'review_text': review[4],
                 'date_time': review[5],
@@ -67,27 +66,31 @@ class LibraryController:
 
     def save_review(self, book_id, user_email, title, rating, review_text):
         try:
+            # Obtiene el título del libro directamente de los parámetros
             book_title = title
+
+            # Verifica si el usuario ya ha revisado el libro
             existing_review = db.select_one(
                 "SELECT * FROM Reviews WHERE user_email = ? AND book_id = ?",
                 (user_email, book_id)
             )
 
             if existing_review:
-                print(f"Review already exists for user_email={user_email} and book_id={book_id}")
+                # El usuario ya ha revisado este libro, puedes manejarlo según tus requisitos
                 return False
 
+            # Inserta la revisión en la base de datos
             db.insert(
                 "INSERT INTO Reviews (user_email, book_id, title, rating, review_text) VALUES (?, ?, ?, ?, ?)",
                 (user_email, book_id, book_title, rating, review_text)
             )
 
-            print(f"Review saved successfully for user_email={user_email} and book_id={book_id}")
-            return True
+            return True  # Revisión exitosa
 
         except Exception as e:
             print(f"Error saving review: {e}")
             return False
+
 
     def get_review_by_id(self, review_id):
         query = "SELECT * FROM Reviews WHERE id = ?"
@@ -120,7 +123,7 @@ class LibraryController:
     def get_user(self, email, password):
         user = db.select("SELECT * from User WHERE email = ? AND password = ?", (email, hash_password(password)))
         if len(user) > 0:
-            return User(user[0][0], user[0][1], user[0][2])
+            return User(user[0][0], user[0][1], user[0][2],user[0][3])
         else:
             return None
 
@@ -129,7 +132,7 @@ class LibraryController:
             "SELECT u.* from User u, Session s WHERE u.id = s.user_id AND s.last_login = ? AND s.session_hash = ?",
             (time, token))
         if len(user) > 0:
-            return User(user[0][0], user[0][1], user[0][2])
+            return User(user[0][0], user[0][1], user[0][2],user[0][3] )
         else:
             return None
 
@@ -142,29 +145,35 @@ class LibraryController:
             return None
 
     def reserve_book(self, book_id, user_email):
+        # Implementa la lógica para reservar el libro para el usuario con el email dado.
+        # Puedes utilizar la función save_reserved_book o algo similar.
+        # Asegúrate de manejar correctamente la relación entre usuarios y libros reservados.
         result = self.save_reserved_book(book_id, user_email)
         return result
 
     def save_reserved_book(self, book_id, user_email):
         try:
+            # Verifica si el usuario ya tiene el libro reservado
             existing_reservation = db.select_one(
                 "SELECT * FROM User_Reserved_Book WHERE user_email = ? AND book_id = ?",
                 (user_email, book_id)
             )
 
             if existing_reservation:
+                # El libro ya está reservado por el usuario
                 return False
 
+            # Inserta la reserva en la base de datos
             db.insert(
                 "INSERT INTO User_Reserved_Book (user_email, book_id) VALUES (?, ?)",
                 (user_email, book_id)
             )
 
-            return True
+            return True  # Reserva exitosa
 
         except Exception as e:
             print(f"Error al reservar el libro: {e}")
-            return False
+            return False  # Manejar cualquier error y devolver False
 
     def get_reserved_books(self, user_email):
         query = """
@@ -198,32 +207,27 @@ class LibraryController:
 
     def return_book(self, book_id, user_email):
         try:
-            existing_read_book = db.select_one(
-                "SELECT * FROM User_Read_Books WHERE user_email = ? AND book_id = ?",
-                (user_email, book_id)
-            )
-
+            # Elimina la reserva del libro en la tabla User_Reserved_Book
             db.delete(
                 "DELETE FROM User_Reserved_Book WHERE user_email = ? AND book_id = ?",
                 (user_email, book_id)
             )
 
-            if existing_read_book:
-                return False
-
+            # Inserta la información de lectura en la tabla User_Read_Books
             db.insert(
                 "INSERT INTO User_Read_Books (user_email, book_id, date_read) VALUES (?, ?, ?)",
                 (user_email, book_id, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             )
 
-            return True
+            return True  # Devolución exitosa
 
         except Exception as e:
             print(f"Error al devolver el libro: {e}")
-            return False
+            return False  # Manejar cualquier error y devolver False
+
 
     def get_reviews_by_book_id(self, book_id):
-        query = "SELECT * FROM Reviews WHERE book_id = ?"
+        query = "SELECT * FROM Reviews WHERE book_id = ? ORDER BY date_time DESC"
         reviews = db.select(query, (book_id,))
         return reviews
 
@@ -254,9 +258,11 @@ class LibraryController:
         except Exception as e:
             print(f"Error borrando review: {e}")
 
-            from flask import session
+    def gehituErabiltzaile(self, id, name, email, password, admin):
+        db.insert("INSERT INTO User VALUES (?,?,?,?)", (id, name, email, password, admin))
 
+    def ezabatuErabiltzaile(self, id, name):
+        db.delete("DELETE * FROM User WHERE id = ? AND name = ? ", (id, name))
 
-
-
-
+    def sartuLiburua(self, name, author, id, description):
+        db.insert("INSERT INTO Book VALUES (?,?,?,?)", (id, name, author, description))
