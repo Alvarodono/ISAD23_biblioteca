@@ -1,0 +1,47 @@
+<!-- foruaKomentatu.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container p-5 my-5 border">
+    {% if gaia %}
+        <h2>{{ gaia.titulo }}</h2>
+        <p>Autorea: {{ gaia.autor }}</p>
+        <p>Deskribapena: {{ gaia.contenido }}</p>
+
+        <form method="post" action="{{ url_for('comentar_gaia', titulo=gaia.titulo) }}">
+            <div class="mb-3">
+                <label for="contenido_tema" class="form-label">Gaian komentatu</label>
+                <textarea class="form-control" id="contenido_tema" name="contenido" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Komentatu</button>
+        </form>
+
+        {% if gaia.obtener_comentarios() %}
+            {% for comentario in gaia.obtener_comentarios() %}
+                <div class="mb-3">
+                    <p>{{ comentario.autor }} -k dio: {{ comentario.contenido }}</p>
+
+                    <form method="post" action="{{ url_for('comentar_gaia', titulo=gaia.titulo, comentario_id=comentario.id) }}">
+                        <div class="mb-3">
+                            <label for="contenido_comentario_{{ comentario.id }}" class="form-label">Komentarioari erantzun</label>
+                            <textarea class="form-control" id="contenido_comentario_{{ comentario.id }}" name="contenido" rows="2" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-secondary">Erantzun</button>
+                    </form>
+
+                    {% if comentario.comentarios %}
+                        {% for respuesta in comentario.comentarios %}
+                            <p>{{ respuesta.autor }} erantzun du: {{ respuesta.contenido }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Ez dago komentariorik.</p>
+        {% endif %}
+    {% else %}
+        <p>Ez da gaia aurkitu.</p>
+    {% endif %}
+</div>
+{% endblock %}

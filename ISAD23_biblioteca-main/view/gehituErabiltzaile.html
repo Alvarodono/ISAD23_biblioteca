@@ -1,0 +1,29 @@
+<!-- administratzaile.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container p-5 my-5 border">
+    <h1>Erabiltzailea Sortu</h1>
+    <p>Sortu nahi den erabiltzailearen datuak sartu</p>
+     <form method="post" action="/gehituErabiltzaile">
+        <div class="mb-3">
+            <label for="name" class="form-label">Erabiltzailea</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+            <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="id" class="form-label">ID-a</label>
+            <input class="form-control" id="id" name="id" required></input>
+        </div>
+         <div class="mb-3">
+            <label for="password" class="form-label">Pasahitza</label>
+            <input class="form-control" id="password" name="password" required></input>
+        </div>
+        <button type="submit" class="btn btn-primary">Konfirmatu</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container p-5 my-5 border">
+    <h1>Gai berria sortu</h1>
+    <form method="post" action="/crear_gaia">
+        <div class="mb-3">
+            <label for="titulo" class="form-label">Gaiaren izenburua</label>
+            <input type="text" class="form-control" id="titulo" name="titulo" required>
+        </div>
+        <div class="mb-3">
+            <label for="contenido" class="form-label">Gaiaren deskribapena</label>
+            <textarea class="form-control" id="contenido" name="contenido" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Gaia gorde</button>
+    </form>
+</div>
+{% endblock %}
+</title>
+</head>
+<body>
+
+</body>
+</html>

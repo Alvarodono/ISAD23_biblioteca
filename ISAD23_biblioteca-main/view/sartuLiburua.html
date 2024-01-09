@@ -1,0 +1,29 @@
+<!-- administratzaile.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container p-5 my-5 border">
+    <h1>Liburu Berria Sartu</h1>
+    <p>Liburutegiak liburu berrien premia dauka sar ezazu liburu berriren bat</p>
+     <form method="post" action="/sartuLiburua">
+        <div class="mb-3">
+            <label for="name" class="form-label">Titulua</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="mb-3">
+            <label for="author" class="form-label">Idazlea</label>
+            <input class="form-control" id="author" name="author" required></input>
+        </div>
+         <div class="mb-3">
+            <label for="id" class="form-label">Id-a</label>
+            <input class="form-control" id="id" name="id" required></input>
+        </div>
+      <div class="mb-3">
+            <label for="description" class="form-label">Liburuaren deskribapena</label>
+            <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Gehitu</button>
+    </form>
+</div>
+{% endblock %}
